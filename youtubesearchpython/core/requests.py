@@ -1,6 +1,4 @@
 import httpx
-import os
-
 from youtubesearchpython.core.constants import userAgent
 
 class RequestCore:
@@ -8,25 +6,39 @@ class RequestCore:
         self.url = None
         self.data = None
         self.timeout = 2
-        
+
     def syncPostRequest(self) -> httpx.Response:
         return httpx.post(
             self.url,
             headers={"User-Agent": userAgent},
             json=self.data,
-            timeout=self.timeout,
-            proxies=self.proxy
+            timeout=self.timeout
         )
 
     async def asyncPostRequest(self) -> httpx.Response:
-        async with httpx.AsyncClient(proxies=self.proxy) as client:
-            r = await client.post(self.url, headers={"User-Agent": userAgent}, json=self.data, timeout=self.timeout)
+        async with httpx.AsyncClient() as client:
+            r = await client.post(
+                self.url,
+                headers={"User-Agent": userAgent},
+                json=self.data,
+                timeout=self.timeout
+            )
             return r
 
     def syncGetRequest(self) -> httpx.Response:
-        return httpx.get(self.url, headers={"User-Agent": userAgent}, timeout=self.timeout, cookies={'CONSENT': 'YES+1'}, proxies=self.proxy)
+        return httpx.get(
+            self.url,
+            headers={"User-Agent": userAgent},
+            timeout=self.timeout,
+            cookies={'CONSENT': 'YES+1'}
+        )
 
     async def asyncGetRequest(self) -> httpx.Response:
-        async with httpx.AsyncClient(proxies=self.proxy) as client:
-            r = await client.get(self.url, headers={"User-Agent": userAgent}, timeout=self.timeout, cookies={'CONSENT': 'YES+1'})
+        async with httpx.AsyncClient() as client:
+            r = await client.get(
+                self.url,
+                headers={"User-Agent": userAgent},
+                timeout=self.timeout,
+                cookies={'CONSENT': 'YES+1'}
+            )
             return r
